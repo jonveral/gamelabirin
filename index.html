@@ -56,49 +56,43 @@
     <div id="message"></div>
 
     <script>
-        const SIZE = 10; // Ukuran labirin (10x10)
+        const SIZE = 10; 
         const maze = [];
-        let playerPosition = { x: 0, y: 0 }; // Posisi pemain
-        let exitPosition = { x: 9, y: 9 }; // Posisi keluar
-        let steps = 0; // Hitung langkah
-        let minimumSteps = Infinity; // Menyimpan langkah terkecil
-        let completed = false; // Status apakah sudah keluar
+        let playerPosition = { x: 0, y: 0 }; 
+        let exitPosition = { x: 9, y: 9 }; 
+        let steps = 0; 
+        let minimumSteps = Infinity; 
+        let completed = false; 
 
-        // Fungsi untuk membuat labirin tanpa jalan buntu
         function generateMaze() {
-            // Buat labirin kosong terlebih dahulu
             for (let y = 0; y < SIZE; y++) {
                 maze[y] = [];
                 for (let x = 0; x < SIZE; x++) {
                     if (Math.random() > 0.3 && !(x === 0 && y === 0) && !(x === SIZE-1 && y === SIZE-1)) {
-                        maze[y][x] = 'jalan'; // Jalan
+                        maze[y][x] = 'jalan'; 
                     } else {
-                        maze[y][x] = 'dinding'; // Dinding
+                        maze[y][x] = 'dinding'; 
                     }
                 }
             }
-            maze[0][0] = 'pemain'; // Posisi pemain
-            maze[SIZE-1][SIZE-1] = 'keluar'; // Posisi keluar
-            // Pastikan ada jalur dari pemain ke keluar
+            maze[0][0] = 'pemain'; 
+            maze[SIZE-1][SIZE-1] = 'keluar'; 
             ensurePath();
         }
 
-        // Fungsi untuk memastikan ada jalur dari pemain ke keluar
         function ensurePath() {
             let visited = Array.from({ length: SIZE }, () => Array(SIZE).fill(false));
             let queue = [{ x: 0, y: 0 }];
             visited[0][0] = true;
             
-            // Implementasi BFS untuk memastikan ada jalur ke keluar
             while (queue.length > 0) {
                 let { x, y } = queue.shift();
                 
-                // Cek 4 arah
                 let directions = [
-                    { x: x - 1, y: y }, // Kiri
-                    { x: x + 1, y: y }, // Kanan
-                    { x: x, y: y - 1 }, // Atas
-                    { x: x, y: y + 1 }, // Bawah
+                    { x: x - 1, y: y }, 
+                    { x: x + 1, y: y }, 
+                    { x: x, y: y - 1 }, 
+                    { x: x, y: y + 1 }, 
                 ];
                 
                 for (let { x: nx, y: ny } of directions) {
@@ -109,34 +103,29 @@
                 }
             }
 
-            // Jika ada jalur, maze bisa digunakan, jika tidak maka kita ulang generate
             if (!visited[SIZE-1][SIZE-1]) {
                 generateMaze();
             }
         }
 
-        // Fungsi untuk menghitung langkah terkecil (pathfinding menggunakan BFS)
         function calculateMinimumSteps() {
             let visited = Array.from({ length: SIZE }, () => Array(SIZE).fill(false));
             let queue = [{ x: 0, y: 0, steps: 0 }];
             visited[0][0] = true;
 
-            // BFS untuk mencari langkah terkecil
             while (queue.length > 0) {
                 let { x, y, steps } = queue.shift();
                 
-                // Jika kita sampai ke posisi keluar
                 if (x === SIZE - 1 && y === SIZE - 1) {
                     minimumSteps = steps;
                     break;
                 }
                 
-                // Cek 4 arah
                 let directions = [
-                    { x: x - 1, y: y }, // Kiri
-                    { x: x + 1, y: y }, // Kanan
-                    { x: x, y: y - 1 }, // Atas
-                    { x: x, y: y + 1 }, // Bawah
+                    { x: x - 1, y: y }, 
+                    { x: x + 1, y: y }, 
+                    { x: x, y: y - 1 }, 
+                    { x: x, y: y + 1 }, 
                 ];
                 
                 for (let { x: nx, y: ny } of directions) {
@@ -150,7 +139,7 @@
 
         function renderMaze() {
             const labirinDiv = document.getElementById('labirin');
-            labirinDiv.innerHTML = ''; // Kosongkan labirin
+            labirinDiv.innerHTML = ''; 
 
             for (let y = 0; y < SIZE; y++) {
                 for (let x = 0; x < SIZE; x++) {
@@ -174,14 +163,12 @@
             if (direction === 'left') newX--;
             if (direction === 'right') newX++;
 
-            // Cek apakah langkah valid
             if (newX >= 0 && newX < SIZE && newY >= 0 && newY < SIZE && maze[newY][newX] !== 'dinding') {
-                maze[playerPosition.y][playerPosition.x] = 'jalan'; // Hapus pemain dari posisi sebelumnya
+                maze[playerPosition.y][playerPosition.x] = 'jalan'; 
                 playerPosition = { x: newX, y: newY };
-                maze[playerPosition.y][playerPosition.x] = 'pemain'; // Tempatkan pemain di posisi baru
+                maze[playerPosition.y][playerPosition.x] = 'pemain'; 
                 steps++;
 
-                // Jika pemain mencapai posisi keluar
                 if (playerPosition.x === exitPosition.x && playerPosition.y === exitPosition.y) {
                     completed = true;
                     if (steps === minimumSteps) {
@@ -198,7 +185,7 @@
         }
 
         generateMaze();
-        calculateMinimumSteps(); // Hitung langkah terkecil sebelum permainan dimulai
+        calculateMinimumSteps(); 
         renderMaze();
     </script>
 
